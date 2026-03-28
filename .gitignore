@@ -1,0 +1,13 @@
+# Unity auto-generated, never commit
+/[Ll]ibrary/
+/[Tt]emp/
+
+# Build output and IDE files
+/[Bb]uild/
+/[Oo]bj/
+.vs/
+
+# OS junk files
+.DS_Store
+Thumbs.db
+Desktop.ini
