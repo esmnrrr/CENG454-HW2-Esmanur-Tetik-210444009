@@ -35,7 +35,10 @@ public class DangerZoneController : MonoBehaviour
             }
 
             // TODO: destroy the active missile and clear the HUD warning
-            // if (missileLauncher != null) missileLauncher.DestroyActiveMissile();
+            if (missileLauncher != null)
+            {
+                missileLauncher.DestroyActiveMissile();
+            }
 
             examManager.ExitDangerZone();
         }
@@ -47,6 +50,9 @@ public class DangerZoneController : MonoBehaviour
         yield return new WaitForSeconds(missileDelay);
 
         Debug.Log("5 saniye doldu!");
-        // if (missileLauncher != null) missileLauncher.Launch(target);
+        if (missileLauncher != null)
+        {
+            missileLauncher.Launch(target);
+        }
     }
 }
