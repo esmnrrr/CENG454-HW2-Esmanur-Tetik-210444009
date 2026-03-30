@@ -1,31 +1,52 @@
 using UnityEngine;
+using System.Collections;
 
 public class DangerZoneController : MonoBehaviour
 {
-    // Yöneticimize (beyne) ulaþmak için bir referans
     [SerializeField] private FlightExamManager examManager;
+    [SerializeField] private MissileLauncher missileLauncher;
+    [SerializeField] private float missileDelay = 5f;
 
-    // Herhangi bir obje bu Trigger (görünmez küp) içine girdiðinde çalýþýr 
-    private void OnTriggerEnter(Collider other)
+    private Coroutine activeCountdown;
+
+    private void OnTriggerEnter(Collider collision)
     {
-        // Giren obje bizim uçaðýmýz mý?
-        if (other.CompareTag("Player"))
+        // TODO: confirm the Player tag
+        if (collision.CompareTag("Player"))
         {
-            // Evet uçak! Yöneticideki o kýrmýzý yazýlarý çýkartan metodu çalýþtýr 
+            // TODO: push the warning message "Entered a Dangerous Zone!" to the HUD
             examManager.EnterDangerZone();
-            Debug.Log("Uçak tehlike bölgesine girdi!");
+
+            // TODO: start the delayed missile launch countdown
+            activeCountdown = StartCoroutine(MissileCountdown(collision.transform));
         }
     }
 
-    // Obje Trigger'ýn içinden çýkýp gittiðinde çalýþýr
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider collision)
     {
-        // Çýkan obje bizim uçaðýmýz mý? 
-        if (other.CompareTag("Player"))
+        // TODO: confirm the Player tag
+        if (collision.CompareTag("Player"))
         {
-            // Evet uçak kurtuldu! Yöneticideki yeþil "Threat Cleared" metodunu çalýþtýr
+            // TODO: cancel any pending launch countdown 
+            if (activeCountdown != null)
+            {
+                StopCoroutine(activeCountdown);
+                activeCountdown = null;
+            }
+
+            // TODO: destroy the active missile and clear the HUD warning
+            // if (missileLauncher != null) missileLauncher.DestroyActiveMissile();
+
             examManager.ExitDangerZone();
-            Debug.Log("Uçak tehlike bölgesinden çýktý!");
         }
+    }
+
+    // Geri sayým motoru (Coroutine)
+    private IEnumerator MissileCountdown(Transform target)
+    {
+        yield return new WaitForSeconds(missileDelay);
+
+        Debug.Log("5 saniye doldu!");
+        // if (missileLauncher != null) missileLauncher.Launch(target);
     }
 }

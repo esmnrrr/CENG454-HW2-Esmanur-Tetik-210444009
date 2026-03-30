@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class FlightExamManager : MonoBehaviour
+public class FlightExamManager: MonoBehaviour
 {
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private TMP_Text missionText;
@@ -20,19 +20,29 @@ public class FlightExamManager : MonoBehaviour
 
     public void EnterDangerZone()
     {
-        missionText.text = "Entered a Dangerous Zone!";
-        missionText.color = Color.red;
-        statusText.text = "Status: IN DANGER";
-        statusText.color = Color.red;
+        // TODO: update the mission state and HUD
+        threatCleared = false;  // Tehdit tespit ediyoruz
+
+        if (statusText != null)
+            statusText.text = "Status: IN DANGER";
+            statusText.color = Color.red;
+
+        if (missionText != null)
+            missionText.text = "Entered a Dangerous Zone!";
+            missionText.color = Color.red;
     }
 
     public void ExitDangerZone()
     {
-        threatCleared = true;
+        // TODO: mark the threat as cleared and refresh the HUD
+        threatCleared = true;   // Tehdit yok
 
-        missionText.text = "Threat Cleared! Proceed to Landing.";
-        missionText.color = Color.yellow;
-        statusText.text = "Status: Safe";
-        statusText.color = Color.green;
+        if (statusText != null)
+            statusText.text = "Status: Cleared!";
+            statusText.color = Color.green;
+
+        if (missionText != null)
+            missionText.text = "Find the landing strip and land safely.";
+            missionText.color = Color.yellow;
     }
 }
