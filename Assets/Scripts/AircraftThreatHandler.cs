@@ -11,15 +11,37 @@ public class AircraftThreatHandler : MonoBehaviour
     void Start()
     {
         // TODO (Task 3-G): cache GetComponent<Rigidbody>() into 'rb' 
+        rb = GetComponent<Rigidbody>();
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        // TODO (Task 3-H): if the missile hits the aircraft, apply the chosen penalty 
+        // TODO (Task 3-H): if the missile hits the aircraft, apply the chosen penalty
+        if (collision.CompareTag("Missile"))    // Carpan obje missile ise
+        {
+            // Task 3-J, 3-K : gorev basarisiz diyorum
+            if (examManager != null) examManager.FailMission();
+
+            // patlama sesini caliyorum
+            if (hitAudioSource != null) hitAudioSource.Play();
+
+            // carpan fuzeyi destroy ediyorum ki respawn olunca kaldigi yerden bana yonelmesin
+            Destroy(collision.gameObject);
+
+            // baslangic noktasina isinliyorum
+            if (respawnPoint != null)
+            {
+                transform.position = respawnPoint.position;
+                transform.rotation = respawnPoint.rotation;
+
+                if (rb != null)
+                {
+                    rb.linearVelocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                }
+            }
+
+         
+        }
     }
 }
-
-// Extend your FlightExamManager.cs from Task 2 
-// TODO (Task 3-I): store whether the threat was cleared 
-// TODO (Task 3-J): handle failure, reset, or damage state when the missile reaches the aircraft 
-// TODO (Task 3-K): update the HUD so the player understands whether escape or landing is now allowed 

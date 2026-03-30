@@ -5,8 +5,10 @@ public class FlightExamManager: MonoBehaviour
 {
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private TMP_Text missionText;
+    [SerializeField] private AudioSource escapeAudioSource;  // Task 3.3: Basarili kacis sesi
 
     private bool hasTakenOff = false;
+    // TODO (Task 3-I): store whether the threat was cleared
     private bool threatCleared = false;
     private bool missionComplete = false;
 
@@ -20,6 +22,7 @@ public class FlightExamManager: MonoBehaviour
 
     public void EnterDangerZone()
     {
+        missionComplete = false;
         // TODO: update the mission state and HUD
         threatCleared = false;  // Tehdit tespit ediyoruz
 
@@ -34,6 +37,8 @@ public class FlightExamManager: MonoBehaviour
 
     public void ExitDangerZone()
     {
+        if (missionComplete) return;
+
         // TODO: mark the threat as cleared and refresh the HUD
         threatCleared = true;   // Tehdit yok
 
@@ -44,5 +49,47 @@ public class FlightExamManager: MonoBehaviour
         if (missionText != null)
             missionText.text = "Find the landing strip and land safely.";
             missionText.color = Color.yellow;
+
+        // kacis basariliyse caliyorum
+        if (escapeAudioSource != null)
+            escapeAudioSource.Play();
     }
+
+    // TODO (Task 3-J): handle failure, reset, or damage state
+    // TODO (Task 3-K): update the HUD so the player understands
+    public void FailMission()
+    {
+        missionComplete = true;
+        threatCleared = false;
+
+        if (statusText != null)
+            statusText.text = "Status: CRASHED!";
+            statusText.color = Color.red;
+
+        if (missionText != null)
+            missionText.text = "MISSION FAILED! You were hit by the missile. Restarting...";
+            missionText.color = Color.red;
+    }
+
+    // respawn olunca ucak tekrar hareket edince yazilari ilk state e geri getiriyrm, HOCAM SIZ EKLE DEMEMISSINIZ AMA eklemek mantikli geldigi icin ekliyorum
+    private void Update()
+    {
+        if (missionComplete && Input.anyKeyDown)    // kaza olduysa VE bir tusa basildiysa state i ilk haline cekiyorum cunku crashed yazisini tutmak istemiyorum
+        {
+            missionComplete = false;
+
+            if (statusText != null)
+            {
+                statusText.text = "Status: Safe";
+                statusText.color = Color.green;
+            }
+
+            if (missionText != null)
+            {
+                missionText.text = "Take off and cross the corridor.";
+                missionText.color = Color.white;
+            }
+        }
+    }
+
 }
