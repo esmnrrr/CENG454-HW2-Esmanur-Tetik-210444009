@@ -76,6 +76,7 @@ public class FlightExamManager: MonoBehaviour
     {
         if (missionComplete && Input.anyKeyDown)    // kaza olduysa VE bir tusa basildiysa state i ilk haline cekiyorum cunku crashed yazisini tutmak istemiyorum
         {
+            hasTakenOff = false;
             missionComplete = false;
 
             if (statusText != null)
@@ -88,6 +89,49 @@ public class FlightExamManager: MonoBehaviour
             {
                 missionText.text = "Take off and cross the corridor.";
                 missionText.color = Color.white;
+            }
+        }
+    }
+
+    // kalkis yapildigini kaydediyorum
+    public void RegisterTakeoff()
+    {
+        // daha önce kalkýþ yapmadýysak ve kaza yapmadýysak
+        if (!hasTakenOff && !missionComplete)
+        {
+            hasTakenOff = true;
+            Debug.Log("Sýnav Baþladý: Uçak baþarýyla havalandý!");
+        }
+    }
+
+    // (TASK 4.2)inis yapmaya calistigimizda kurallari kontrol ediyorum
+    public void AttemptLanding()
+    {
+        if (missionComplete) return; // kaza oldu veya basarili olduysa bir sey yapmiyorum
+
+        //  ucak havalandi mi VE missile temizlendi mi
+        if (hasTakenOff && threatCleared)
+        {
+            missionComplete = true; // gorev tamam
+
+            if (statusText != null)
+            {
+                statusText.text = "Status: SUCCESS";
+                statusText.color = Color.green;
+            }
+            if (missionText != null)
+            {
+                missionText.text = "MISSION COMPLETE! Excellent flying.";
+                missionText.color = Color.green;
+            }
+        }
+        // havalandi AMA missile i atlatmadan inmeye calisti
+        else if (hasTakenOff && !threatCleared)
+        {
+            if (missionText != null)
+            {
+                missionText.text = "Landing rejected! Clear the danger zone first.";
+                missionText.color = Color.yellow;
             }
         }
     }
